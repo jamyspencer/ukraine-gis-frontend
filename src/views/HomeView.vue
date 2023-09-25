@@ -1,9 +1,22 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+  import { onMounted } from 'vue'
+  import { useMapStore } from "@/stores/map";
+
+  const mapStore = useMapStore()
+
+  onMounted(() => {
+    mapStore.init()
+  })
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <div id="map"></div>
   </main>
 </template>
+
+<style>
+  #map{
+    min-height: 500px;
+  }
+</style>
