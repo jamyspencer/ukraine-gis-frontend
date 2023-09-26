@@ -1,17 +1,10 @@
 <script setup lang="ts">
-  import { onMounted } from 'vue'
-  import { useMapStore } from "@/stores/map";
-
-  const mapStore = useMapStore()
-
-  onMounted(() => {
-    mapStore.init()
-  })
+  import Map from '@/components/Map.vue';
 </script>
 
 <template>
   <main>
-    <div id="map"></div>
+    <Map></Map>
   </main>
 </template>
 
