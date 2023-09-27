@@ -13,8 +13,6 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@types/leaflet": "^1.9.6",
-    "leaflet": "^1.9.4",
     "ol": "^8.1.0",
     "pinia": "^2.1.6",
     "vue": "^3.3.4",

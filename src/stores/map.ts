@@ -1,71 +1,66 @@
 import { defineStore } from 'pinia'
-import { map, geoJSON, tileLayer, control, Map } from 'leaflet'
-import type { MapOptions, LatLngExpression, Control } from 'leaflet'
 import { ref } from 'vue'
-
+import { Map, View } from 'ol'
+import TileLayer from 'ol/layer/Tile'
+import { OSM } from 'ol/source'
+import {  fromLonLat } from 'ol/proj'
+import Layer from 'ol/layer/Layer'
+import BaseLayer from 'ol/layer/Base'
+import LayerGroup from 'ol/layer/Group'
 type OptionalMap =  Map | null
-
 
 const mapGuard = (obj: any): obj is Map => {
   return obj != null && obj instanceof Map
 }
 
 export const useMapStore = defineStore('map', ()=>{
-    const mapRef = ref<OptionalMap>(null)
-    const overlays = ref<Control.LayersObject>({})
-    const baselayers = ref<Control.LayersObject>({})
+  const map = ref<OptionalMap>(null)
+  const group = new LayerGroup({ layers:[new TileLayer( {source: new OSM()})]} )
+  const overlayLayers = ref<Array<Layer>>([])
 
-    async function init() {
-      const options: MapOptions = {
-          center: { lat: 49, lng:30.5234 },
-          zoom: 6,
-      };
-      mapRef.value = map('map', options)
-      const m = mapRef.value
-      if (mapGuard(m)) {
-        const osm = tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        })
-        baselayers.value["Open Street Map"] = osm
-        m.addLayer(osm)
-        
-        // Using promsie.all to future proof for multiple datasets
-        Promise.all([getRailInfo(m)]).then(_ => manageControlLayers(m))
-      }
-    }
+  async function init() {
+    map.value = new Map({
+      target: 'map-container',
+      layers: group,
+      view: new View({
+        center: fromLonLat([32,48]),
+        zoom: 6,
+      }),
+    });
+  }
+/*
+  async function getRailInfo(m: Map){
+    const response = await fetch("/api/railroads/")
 
-    async function getRailInfo(m: Map){
-      const response = await fetch("/api/railroads/")
-
-      if (response.ok) {
-        const data = await response.json()
-        const gjson = geoJSON(data, {
-          onEachFeature: (feature, layer) => layer.bindPopup(feature.properties.exs_descri),
-          style: feature => {
-            if (feature != null && feature.properties.exs_descri != null ) {
-              if ( "Operational" != feature.properties.exs_descri ) {
-                return {color: "#d9534f"}
-              } 
-            }
-            return {color: "#428bca"}
+    if (response.ok) {
+      const data = await response.json()
+      const gjson = geoJSON(data, {
+        onEachFeature: (feature, layer) => layer.bindPopup(feature.properties.exs_descri),
+        style: feature => {
+          if (feature != null && feature.properties.exs_descri != null ) {
+            if ( "Operational" != feature.properties.exs_descri ) {
+              return {color: "#d9534f"}
+            } 
           }
-        })
-        overlays.value["railroads"] = gjson
-        m.addLayer(gjson)
-      }
+          return {color: "#428bca"}
+        }
+      })
+      overlays.value["railroads"] = gjson
+      m.addLayer(gjson)
     }
+  }
 
-    function manageControlLayers(m: Map){
-      const c = control.layers(baselayers.value, overlays.value)
-      c.addTo(m)
-    }
+  function manageControlLayers(m: Map){
+    const c = control.layers(baselayers.value, overlays.value)
+    c.addTo(m)
+  }
 
-    function focus(latlng: LatLngExpression, zoom: number){
-      const m = mapRef.value
-      if (mapGuard(m)) {
-        m.setView(latlng, zoom);
-      }
+  function focus(latlng: LatLngExpression, zoom: number){
+    const m = mapRef.value
+    if (mapGuard(m)) {
+      m.setView(latlng, zoom);
     }
-    return { map, mapGuard, init, getRailInfo, focus }
+  }*/
+  return { map, mapGuard, init }
+  
 })

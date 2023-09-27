@@ -10,11 +10,11 @@
 </script>
 
 <template>
-    <div id="map"></div>
+    <div id="map-container"></div>
 </template>
 
 <style>
-  #map{
+  #map-container{
     min-height: 800px;
     height: 100%;
   }

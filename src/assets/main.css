@@ -1,6 +1,9 @@
+@import "../../node_modules/ol/ol.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 
 header{
     flex-basis: 10vh;
