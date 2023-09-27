@@ -3,13 +3,8 @@
 </script>
 
 <template>
-  <main>
+  <main class="basis-11/12 grow-1">
     <Map></Map>
   </main>
 </template>
 
-<style>
-  #map{
-    min-height: 500px;
-  }
-</style>

@@ -14,5 +14,8 @@
 </template>
 
 <style>
-    
+  #map{
+    min-height: 800px;
+    height: 100%;
+  }
 </style>

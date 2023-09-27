@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header class="basis-1/12 grow-0">
     <nav>
         <slot></slot>
     </nav>

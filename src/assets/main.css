@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+header{
+    flex-basis: 10vh;
+    flex-grow: 1;
+}
+main {
+    flex-basis: 90vh;
+    flex-grow: 3;
+}
